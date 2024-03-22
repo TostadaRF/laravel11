@@ -41,7 +41,7 @@
                         <option value="Rojo" {{ $property->color == "Rojo" ? 'selected' : '' }}>Rojo</option>
                         <option value="Verde" {{ $property->color == "Verde" ? 'selected' : '' }}>Verde</option>
                         <option value="Azul" {{ $property->color == "Azul" ? 'selected' : '' }}>Azul</option>
-                        <option value="Blanco" {{ $ property->color == "Blanco" ? 'selected' : '' }}>Blanco</option>
+                        <option value="Blanco" {{ $property->color == "Blanco" ? 'selected' : '' }}>Blanco</option>
                     </select>
                 </div>
                 <div class="col-md-3 mb-3">
