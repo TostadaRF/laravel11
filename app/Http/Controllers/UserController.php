@@ -37,7 +37,7 @@ class UserController extends Controller
                 'surname' => $request->surname,
                 'dni' => $request->dni,
                 'email' => $request->email,
-                'password' => Hash::make($request->pass),
+                'password' => $request->pass
             ]);
 
             return redirect()->route('users.index');
@@ -72,7 +72,7 @@ class UserController extends Controller
 
         if($request->pass){
             if($request->pass == $request->pass_check){
-                $user->password = Hash::make($request->pass);
+                $user->password = $request->pass;
             } else {
                 return redirect()->route('users.edit', $id);
             }

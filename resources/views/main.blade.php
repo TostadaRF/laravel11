@@ -9,6 +9,7 @@
                 <h4 class="card-title">🧍 Usuarios</h4>
                 <p class="card-text">
                     <a name="" id="" class="btn btn-primary" href="{{ route('users.index') }}" role="button">Ir a usuarios</a>
+                    <a name="" id="" class="btn btn-primary" href="{{ route('login') }}" role="button">Iniciar sersión</a>
                 </p>
             </div>
         </div>
