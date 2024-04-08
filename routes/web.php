@@ -24,7 +24,13 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'home'])->name('dashboard');
 
-Route::resource('users', UserController::class);
-Route::resource('cars', CarController::class);
-Route::resource('properties', PropertyController::class);
+
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/dashboard', [HomeController::class, 'home'])->name('dashboard');
+    Route::resource('users', UserController::class);
+    Route::resource('cars', CarController::class);
+    Route::resource('properties', PropertyController::class);
+});
