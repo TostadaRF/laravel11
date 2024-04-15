@@ -3,6 +3,18 @@
 @section('content')
     <div class="container mt-5">
         @include('includes.messages')
+
+        <!-- Formulario de filtro -->
+        <form action="{{ route('users.index') }}" method="GET" class="mb-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="Buscar por nombre, apellidos, DNI o email" value="{{ request()->input('search') }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
         <div class="table-responsive">
             <table class="table table-dark">
                 <thead>

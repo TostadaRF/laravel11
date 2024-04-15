@@ -67,4 +67,9 @@ class HomeController extends Controller
     {
         //
     }
+
+    public function management()
+    {
+        return view('management');
+    }
 }

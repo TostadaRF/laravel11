@@ -10,5 +10,6 @@
     Bienvenido al sistema {{$user->name}}, por favor verifique su usuario utilizando el codigo de verificación.
     <br>
     Código de verificación: <b> {{$user->auth_code}} </b>
+    <a href="192.168.1.39/users/verification?email={{$user->email}}&auth_code={{$user->auth_code}}">Verificar Usuario</a>
 </body>
 </html>

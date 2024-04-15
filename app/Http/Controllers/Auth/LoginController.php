@@ -39,7 +39,7 @@ class LoginController extends Controller
         return true;
     }
 
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     public function __construct()
     {

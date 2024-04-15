@@ -7,22 +7,36 @@ use App\Models\User;
 use App\Mail\NewUserEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        Log::channel('debugger')->info('Se ha accedido a la lista de usuarios.');
+
+        $search = $request->input('search');
         $users = User::where('active', 1)->get();
-        //%User = User::where('name', 'Alberto')->get();
+
+
+        if($search){
+            $users = User::where('active', 1)->where('name', 'like', '%'.$search.'%')
+            ->orWhere('surname', 'like', '%'.$search.'%')
+            ->orWhere('dni', 'like', '%'.$search.'%')
+            ->orWhere('email', 'like', '%'.$search.'%')
+            ->get();
+        }
+
         return view('users.index', compact('users'));
     }
 
 
     public function create(Request $request)
     {
+        Log::channel('debugger')->info('Se ha accedido a la creación de un usuario.');
         if (isset($request->error)){
             $error = $request->error;
             return view('users.create', compact('error'));
@@ -50,10 +64,12 @@ class UserController extends Controller
                 Mail::to($user->email)->send(new NewUserEmail($user, $auth_code));
 
         DB::commit();
+            Log::channel('debugger')->info('Usuario creado correctamente.');
 
             session()->flash('success', 'Usuario creado correctamente.');
             return redirect()->route('users.index');
         } else {
+            Log::channel('debugger')->warning('Las contraseñas no coinciden.');
             $error = 'Las contraseñas no coinciden';
             return redirect()->route('users.create', ['error' => $error]);
         }
@@ -104,27 +120,47 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    public function verification()
+    public function verification(Request $request)
     {
-        return view('users.verification');
+        if($request->email){
+            if($this->validateUserAuthCode($request->email, $request->auth_code)){
+                return redirect()->route('dashboard');
+            } else {
+                return redirect()->route('users.verification');
+            }
+        }else{
+            return view('users.verification');
+        }
     }
+
 
     public function verify(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
-        if($user){
-            if($user->auth_code == $request->auth_code){
-                $user->verified = 1;
-                $user->save();
-                session()->flash('success', 'Usuario verificado correctamente.');
-                return redirect()->route('login');
-            } else {
-                session()->flash('error', 'Código de verificación incorrecto.');
-                return redirect()->route('users.verification');
-            }
+        if($this->validateUserAuthCode($request->email, $request->auth_code)){
+            return redirect()->route('dashboard');
         } else {
-            session()->flash('error', 'Usuario no encontrado.');
             return redirect()->route('users.verification');
         }
+    }
+
+    private function validateUserAuthCode($email, $auth_code)
+    {
+        $user = User::where('email', $email)->first();
+            if($user){
+                if($user->auth_code == $auth_code){
+                    $user->verified = 1;
+                    $user->save();
+
+                    Auth::login($user);
+                    session()->flash('success', 'Bienvenido, '.$user->name.'. Su usuario ha sido verificado correctamente.');
+                    return true;
+                } else {
+                    session()->flash('error', 'Código de verificación incorrecto.');
+                    return false;
+                }
+            } else {
+                session()->flash('error', 'Usuario no encontrado.');
+                return false;
+            }
     }
 }
