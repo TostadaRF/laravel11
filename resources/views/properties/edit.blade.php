@@ -5,7 +5,7 @@
         <form method="POST" action="{{ route('properties.update', $property->id) }}">
             @method('PUT')
             @csrf
-
+            @include('includes.messages')session()->flash('success', 'Usuario creado correctamente.');
             <div class="row justify-content-center">
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Tipo</label>

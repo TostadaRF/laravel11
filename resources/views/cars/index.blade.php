@@ -3,6 +3,7 @@
 @section('content')
     <div class="container mt-5">
         <div class="table-responsive">
+            @include('includes.messages')
             <table class="table table-dark">
                 <thead>
                     <tr>

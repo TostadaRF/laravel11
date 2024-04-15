@@ -35,6 +35,7 @@ class PropertyController extends Controller
             'color' => $request->color,
             'owner' => $request->owner
         ]);
+        session()->flash('success', 'Propiedad creada correctamente.');
         return redirect()->route('properties.index');
     }
 
@@ -63,7 +64,7 @@ class PropertyController extends Controller
         $property->owner = $request->owner;
 
         $property->save();
-
+        session()->flash('info', 'Propiedad actualizada correctamente.');
         return redirect()->route('properties.index');
     }
 
@@ -74,6 +75,7 @@ class PropertyController extends Controller
         $property->active = 0;
         $property->save();
 
+        session()->flash('success', 'Propiedad eliminada correctamente.');
         return redirect()->route('properties.index');
     }
 }

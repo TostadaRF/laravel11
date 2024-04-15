@@ -13,7 +13,10 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'surname',
+        'dni',
         'email',
         'password',
+        'auth_code',
     ]; //Decir que campos se pueden usar
 }

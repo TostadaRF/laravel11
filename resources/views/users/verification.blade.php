@@ -5,10 +5,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Login</div>
+                <div class="card-header">Verificación de usuario</div>
                 @include('includes.messages')
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('users.verify') }}">
                         @csrf
 
                         <div class="row mb-3">
@@ -19,16 +19,16 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">Contraseña</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-end">Código de verificación</label>
                             <div class="col-md-6">
-                                <input  type="password" class="form-control"  name="password" required>
+                                <input  type="text" class="form-control"  name="auth_code" placeholder="1234" maxlength="4" required>
                             </div>
                         </div>
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Iniciar sesión
+                                    Verificar Usuario
                                 </button>
                                 <a href="{{ route('home') }}" class="btn btn-primary">Volver</a>
                             </div>

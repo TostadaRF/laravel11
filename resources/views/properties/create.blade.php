@@ -4,7 +4,7 @@
     <div class="container mt-5">
         <form method="POST" action="{{ route('properties.store') }}">
             @csrf
-
+            @include('includes.messages')
             <div class="row justify-content-center">
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Tipo</label>

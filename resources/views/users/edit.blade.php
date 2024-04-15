@@ -5,6 +5,7 @@
         <form method="POST" action="{{ route('users.update', $user->id ) }}">
             @method('PUT')
             @csrf
+            @include('includes.messages')
             <div class="row justify-content-center">
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Nombre</label>

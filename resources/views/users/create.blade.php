@@ -4,7 +4,7 @@
     <div class="container mt-5">
         <form method="POST" action="{{ route('users.store') }}">
             @csrf
-
+            @include('includes.messages')
             <div class="row justify-content-center">
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Nombre</label>
@@ -37,7 +37,12 @@
         </form>
 
         <div class="d-grid gap-2 mt-3">
+            @auth
             <a class="btn btn-secondary" href="{{ route('users.index') }}" role="button">Volver</a>
+            @endauth
+            @guest
+            <a class="btn btn-secondary" href="{{ route('home') }}" role="button">Volver</a>
+            @endguest
         </div>
 
     </div>
