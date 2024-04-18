@@ -17,10 +17,18 @@
                     @auth
                         @if (Auth::user()->admin == 1)
                             <li class="nav-item"><a class="nav-link" href="{{ route('management') }}">Gestión</a></li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <li class="nav-item">
+                                    <button type="submit" class="btn btn-link nav-link">Logout</button>
+                                </li>
+                            </form>
                         @else
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <li class="nav-item"><button type="submit" class="nav-link">Logout</button></li>
+                            <li class="nav-item">
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </li>
                         </form>
                         @endif
                     @endauth
@@ -28,6 +36,8 @@
             </div>
         </div>
     </nav>
+    @include('includes.messages')
+
     <!-- Modal de inicio de sesión -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -60,6 +70,53 @@
         </div>
     </div>
 
+        <!-- Modal Registro-->
+        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="crearCuentaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-3" style="background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(255, 69, 0, 0.8)); border: 2px solid #FF4500;">
+                    <div class="modal-header bg-dark text-white border-0 rounded-top">
+                        <h5 class="modal-title" id="crearCuentaModalLabel">Crear cuenta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulario -->
+                        <form method="POST" action="{{ route('users.store') }}">
+                            @csrf
+                            <div class="row justify-content-center">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white">Nombre</label>
+                                    <input type="text" class="form-control" name="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white">Apellidos</label>
+                                    <input type="text" class="form-control" name="surname" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white">DNI</label>
+                                    <input type="text" class="form-control" name="dni" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white">Email</label>
+                                    <input type="text" class="form-control" name="email" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white">Contraseña</label>
+                                    <input type="password" class="form-control" name="pass" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label text-white">Repetir contraseña</label>
+                                    <input type="password" class="form-control" name="pass_check" required>
+                                </div>
+                                <input type="hidden" name="role" value="user">
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <!-- Masthead-->
     <header class="masthead">
@@ -71,7 +128,12 @@
                 </div>
                 <div class="col-lg-8 align-self-baseline">
                     <p class="text-white-75 mb-5"> Descubre experiencias únicas que cambiarán tu vida.</p>
-                    <a class="btn btn-primary btn-xl" href="">Crea una cuenta</a>
+                    @guest
+                        <a class="btn btn-primary btn-xl" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Crea una cuenta</a>
+                    @endguest
+                    @auth
+                        <a class="btn btn-primary btn-xl" href="">Explorar eventos</a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -117,11 +179,4 @@
     <footer class="bg-light py-5">
         <div class="container px-4 px-lg-5"><div class="small text-center text-muted">Copyright &copy; 2024 - Daniel & Alberto - Amigo</div></div>
     </footer>
-    <script>
-        // Inicializa los modals de Bootstrap
-        var modals = document.querySelectorAll('.modal');
-        modals.forEach(function (modal) {
-            new bootstrap.Modal(modal);
-        });
-    </script>
 @endsection

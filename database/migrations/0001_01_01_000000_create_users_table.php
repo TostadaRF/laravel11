@@ -19,10 +19,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamps();
-            $table->boolean('active')->default(true);
-            $table->boolean('verified')->default(false);
-            $table->string('auth_code')->nullable();
-            $table->boolean('admin')->default(false);
         });
 
         schema::create('cars', function (Blueprint $table){

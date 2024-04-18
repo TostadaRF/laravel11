@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -28,6 +29,7 @@ Route::post('/users/verify', [UserController::class, 'verify'])->name('users.ver
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [HomeController::class, 'home'])->name('dashboard');
     Route::resource('users', UserController::class)->except(['create', 'store']);
+    Route::resource('events', EventController::class);
     Route::resource('cars', CarController::class);
     Route::resource('properties', PropertyController::class);
 });

@@ -44,14 +44,36 @@ class UserController extends Controller
         return view('users.create');
     }
 
+    public function register(Request $request)
+    {
+        Log::channel('debugger')->info('Se ha accedido al registro de un usuario.');
+        if (isset($request->error)){
+            $error = $request->error;
+            return view('users.register', compact('error'));
+        }
+        return view('users.register');
+    }
+
 
     public function store(Request $request)
     {
         DB::beginTransaction();
 
-            if($request->pass == $request->pass_check){
-                $auth_code = strval(rand(1000, 9999));
+        // Verificar si ya existe un usuario con el mismo DNI o correo electrónico
+        $existingUser = User::where('dni', $request->dni)
+        ->orWhere('email', $request->email)
+        ->first();
 
+        if ($existingUser) {
+            // Si ya existe un usuario con el mismo DNI o correo electrónico, muestra un mensaje de error
+            session()->flash('error', 'Ya existe un usuario con el mismo DNI o correo electrónico.');
+            return redirect()->route('home');
+        }
+
+        if($request->pass == $request->pass_check){
+            $auth_code = strval(rand(1000, 9999));
+            $role = $request->input('role');
+            if($role == 'admin'){
                 $user = User::create([
                     'name' => $request->name,
                     'surname' => $request->surname,
@@ -59,19 +81,36 @@ class UserController extends Controller
                     'email' => $request->email,
                     'password' => $request->pass,
                     'auth_code' => $auth_code,
+                    'verified' => 1,
                 ]);
+            }else{
+                $user = User::create([
+                    'name' => $request->name,
+                    'surname' => $request->surname,
+                    'dni' => $request->dni,
+                    'email' => $request->email,
+                    'password' => $request->pass,
+                    'auth_code' => $auth_code,
+                    'verified' => 0,
+                ]);
+            }
 
-                Mail::to($user->email)->send(new NewUserEmail($user, $auth_code));
+        Mail::to($user->email)->send(new NewUserEmail($user, $auth_code));
 
         DB::commit();
             Log::channel('debugger')->info('Usuario creado correctamente.');
 
-            session()->flash('success', 'Usuario creado correctamente.');
-            return redirect()->route('users.index');
-        } else {
+            if($role == 'admin'){
+                session()->flash('success', 'Usuario creado correctamente.');
+                return redirect()->route('users.index');
+            }else{
+                session()->flash('success', 'Usuario creado correctamente. Por favor, compruebe su email para verificar su cuenta.');
+                return redirect()->route('home');
+            }
+        }else{
             Log::channel('debugger')->warning('Las contraseñas no coinciden.');
-            $error = 'Las contraseñas no coinciden';
-            return redirect()->route('users.create', ['error' => $error]);
+            session()->flash('error', 'Las contraseñas no coinciden.');
+            return redirect()->route('users.create');
         }
     }
 
@@ -124,7 +163,7 @@ class UserController extends Controller
     {
         if($request->email){
             if($this->validateUserAuthCode($request->email, $request->auth_code)){
-                return redirect()->route('dashboard');
+                return redirect()->route('home');
             } else {
                 return redirect()->route('users.verification');
             }
@@ -137,7 +176,7 @@ class UserController extends Controller
     public function verify(Request $request)
     {
         if($this->validateUserAuthCode($request->email, $request->auth_code)){
-            return redirect()->route('dashboard');
+            return redirect()->route('home');
         } else {
             return redirect()->route('users.verification');
         }

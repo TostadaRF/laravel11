@@ -18,5 +18,6 @@ class User extends Authenticatable
         'email',
         'password',
         'auth_code',
+        'verified',
     ]; //Decir que campos se pueden usar
 }

@@ -58,7 +58,7 @@
 
         <div class="d-grid gap-2">
             <a name="" id="" class="btn btn-success" href="{{ route('users.create') }}" role="button">Nuevo usuario</a>
-            <a name="" id="" class="btn btn-secondary" href="{{ route('home') }}" role="button">Volver</a>
+            <a name="" id="" class="btn btn-secondary" href="{{ route('management') }}" role="button">Volver</a>
         </div>
 
     </div>

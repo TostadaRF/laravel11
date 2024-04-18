@@ -30,6 +30,7 @@
                     <label class="form-label">Comprobar contraseña</label>
                     <input type="password" class="form-control" name="pass_check" required>
                 </div>
+                <input type="hidden" name="role" value="admin">
             </div>
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success" role="button">Enviar</button>

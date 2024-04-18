@@ -45,4 +45,19 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    // Método para cerrar sesión
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        // Mostrar un mensaje de éxito
+        session()->flash('success', 'Sesión cerrada con éxito.');
+
+        return $this->loggedOut($request) ?: redirect('/');
+    }
 }
